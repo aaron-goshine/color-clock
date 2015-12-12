@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>  
+    <meta charset="UTF-8">
+    <title>Untitled Page</title>
+    <style>
+      /*styles goes here */
+    </style>
+  </head>
+  <body>
+    <div>
+      <canvas width="900" height="600" id="canvas">
+      </canvas>
+    </div>
+    <script  type="text/javascript">
+      var alpha = 0.0;
+      var fadeIn = false;
+      var sLimit = 800;
+      var canvas = document.getElementById('canvas');
+      var ctx = canvas.getContext('2d');
+      var series = [];
+      for (var i = 0; i < (sLimit * 2); i++) {
+        series.push(0.0);  
+      }
+      var cHeight = canvas.height;
+      var cWidth = canvas.width;
+
+
+      function render () {
+        var sLen = series.length;
+        if ( sLen >= sLimit) {
+          ctx.clearRect(0, 0, cWidth, cHeight);
+          ctx.beginPath();
+          ctx.moveTo(0, cHeight);
+          ctx.lineTo(cWidth, cHeight);
+          ctx.moveTo(0, cHeight);
+
+          for (var i = 0; i < sLen; i++) {
+            ctx.lineTo(cWidth * (i / sLen), cHeight - (series[i] * (cHeight / 4)));
+          }
+        ctx.lineTo(cWidth, cHeight);
+        ctx.fillStyle="#448866";
+        ctx.fill();
+        ctx.closePath();
+        ctx.stroke();
+        }
+
+        if (fadeIn) {
+          alpha += 0.1;
+          if (alpha >= 1) {
+            alpha = 1;
+            fadeIn = false;
+          }
+        } else {
+          alpha -= 0.01;
+          if (alpha < 0) {
+            alpha = 0;
+            fadeIn = true;
+          }
+        }
+        // ctx.globalAlpha = alpha;
+        // series.push(alpha * Math.random());  
+        var rnd = Math.random();
+        series.push(Math.cos(alpha * rnd) * Math.sin(alpha * rnd));  
+        if (sLen > sLimit) series = series.slice(sLen - sLimit);
+      }
+      window.requestAnimFrame = (function () {
+        return window.requestAnimationFrame_  ||
+          window.webkitRequestAnimationFrame_ ||
+          window.mozRequestAnimationFrame_   ||
+          window.onRequestAnimationFrame_    ||
+          function (callback) {
+          window.setTimeout(callback, 90);
+        };
+      })();
+
+      (function animloop () {
+        requestAnimFrame(animloop);
+        render();
+      })();
+    </script>
+  </body>
+</html>
+
