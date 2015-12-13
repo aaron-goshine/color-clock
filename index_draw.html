@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>  
+    <meta charset="UTF-8">
+    <title>Untitled Page</title>
+    <script  type="text/javascript">
+      //JavaScript goes here
+    window.addEventListener('load', eventWindowLoaded, false);
+    var canvas, ctx;
+
+
+    function eventWindowLoaded () {
+      canvas = document.getElementById('canvas');
+      ctx = canvas.getContext('2d');
+      canvasApp();
+    }
+
+    function canvasApp () {
+      drawScreen();
+    }
+
+    function drawScreen () {
+      ctx.fillStyle = '#aaaaaa';
+      ctx.fillRect(0, 0, 200, 200);
+      ctx.fillStyle = '#000000';
+      ctx.textBaseline = 'top';
+      ctx.fillText('Canvas', 0, 0);
+    }
+    </script>
+    <style>
+      /*styles goes here */
+    </style>
+  </head>
+  <body>
+    <div style="position: absolute; top: 50px; letf: 50px;">
+      <canvas id="canvas" width="500" height="500">
+      </canvas>
+    </div>
+    </body>
+  </html>
+

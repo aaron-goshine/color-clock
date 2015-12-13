@@ -13,18 +13,17 @@
       </canvas>
     </div>
     <script  type="text/javascript">
-      var alpha = 0.0;
-      var fadeIn = false;
+      var count = 0.0;
+      var countUp = false;
       var sLimit = 800;
       var canvas = document.getElementById('canvas');
       var ctx = canvas.getContext('2d');
       var series = [];
       for (var i = 0; i < (sLimit * 2); i++) {
-        series.push(0.0);  
+        series.push(0.0);
       }
       var cHeight = canvas.height;
       var cWidth = canvas.width;
-
 
       function render () {
         var sLen = series.length;
@@ -36,7 +35,7 @@
           ctx.moveTo(0, cHeight);
 
           for (var i = 0; i < sLen; i++) {
-            ctx.lineTo(cWidth * (i / sLen), cHeight - (series[i] * (cHeight / 4)));
+            ctx.lineTo(cWidth * (i / sLen), cHeight - (series[i] * (cHeight / 2)));
           }
         ctx.lineTo(cWidth, cHeight);
         ctx.fillStyle="#448866";
@@ -45,32 +44,30 @@
         ctx.stroke();
         }
 
-        if (fadeIn) {
-          alpha += 0.1;
-          if (alpha >= 1) {
-            alpha = 1;
-            fadeIn = false;
+        if (countUp) {
+          count += 0.1;
+          if (count >= 1) {
+            count = 1;
+            countUp = false;
           }
         } else {
-          alpha -= 0.01;
-          if (alpha < 0) {
-            alpha = 0;
-            fadeIn = true;
+          count -= 0.01;
+          if (count < 0) {
+            count = 0;
+            countUp = true;
           }
         }
-        // ctx.globalAlpha = alpha;
-        // series.push(alpha * Math.random());  
         var rnd = Math.random();
-        series.push(Math.cos(alpha * rnd) * Math.sin(alpha * rnd));  
+        series.push(Math.cos(count * rnd) * Math.sin(count * rnd));  
         if (sLen > sLimit) series = series.slice(sLen - sLimit);
       }
       window.requestAnimFrame = (function () {
-        return window.requestAnimationFrame_  ||
-          window.webkitRequestAnimationFrame_ ||
-          window.mozRequestAnimationFrame_   ||
-          window.onRequestAnimationFrame_    ||
+        return window.requestAnimationFrame  ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          window.onRequestAnimationFrame     ||
           function (callback) {
-          window.setTimeout(callback, 90);
+          window.setTimeout(callback, 1000/60);
         };
       })();
 
