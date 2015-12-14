@@ -20,22 +20,91 @@
     }
 
     function drawScreen () {
-      ctx.fillStyle = '#aaaaaa';
-      ctx.fillRect(0, 0, 200, 200);
+      drawBoxes();
+      drawLines();
+      drawText();
+      drawCircle();
+      drawArcs();
+    }
+
+    function drawText () {
       ctx.fillStyle = '#000000';
       ctx.textBaseline = 'top';
-      ctx.fillText('Canvas', 0, 0);
+      ctx.fillText('RTFM', 20, 20);
     }
-    </script>
+
+    function drawBoxes () {
+      ctx.fillStyle = '#000000';
+      ctx.strokeStyle = '#ff00ff';
+      ctx.fillRect(20, 60, 80, 80);
+      ctx.strokeRect(0, 0, canvas.width, canvas.height); 
+      ctx.strokeRect(20, 60, 80, 80); 
+      ctx.clearRect(40, 80, 40, 40); 
+
+
+    }
+    function drawLines () {
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 10;
+
+      // Sample 1: round end, bevel join, at top left of canvas
+      ctx.lineJoin = "bevel";
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(300, 100);
+      ctx.lineTo(325, 100);
+      ctx.lineTo(325, 125);
+      ctx.stroke();
+      ctx.closePath();
+
+    // Sample 2: round end, bevel join, not at top left of canvas
+      ctx.beginPath();
+      ctx.moveTo(310, 150);
+      ctx.lineTo(335, 150);
+      ctx.lineTo(335, 175);
+      ctx.stroke();
+      ctx.closePath();
+
+    // Sample 3: flat end, round join, not at top left of canvas
+      ctx.lineCap = "butt";
+      ctx.beginPath();
+      ctx.moveTo(310, 200);
+      ctx.lineTo(335, 200);
+      ctx.lineTo(335, 225);
+      ctx.stroke();
+      ctx.closePath();
+  }
+
+  function drawCircle () {
+    ctx.beginPath();
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 5;
+    ctx.arc(400, 400, 50, (Math.PI / 180) * 0, (Math.PI / 180) * 360, false);
+    ctx.stroke();
+    ctx.closePath();
+  }
+
+  function drawArcs () {
+    ctx.beginPath();
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 5;
+    ctx.moveTo(400, 400);
+    ctx.lineTo(500, 600)
+    ctx.arcTo(700, 700, 500, 400, 55);
+    ctx.stroke();
+    ctx.closePath();
+  } 
+
+</script>
     <style>
       /*styles goes here */
     </style>
   </head>
   <body>
     <div style="position: absolute; top: 50px; letf: 50px;">
-      <canvas id="canvas" width="500" height="500">
+      <canvas id="canvas" width="800" height="800">
       </canvas>
     </div>
-    </body>
-  </html>
+  </body>
+</html>
 

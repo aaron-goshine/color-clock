@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Text logo maker</title>
+    <script  type="text/javascript">
+      var canvas;
+      var ctx;
+      var fillOrStroke = 'fill';
+      var fillType = 'colorFill';
+      var fontFace = 'serif';
+      var fontSize = '50';
+      var fontStyle = 'normal';
+      var fontWeight = 'normal';
+      var message = 'Coder Coder';
+      var pattern = new Image();
+      var shadowBlur = 1;
+      var shadowColor = 'black';
+      var shadowX = 1;
+      var shadowY = 1;
+      var textAlign = 'center';
+      var textAlpha = 1;
+      var textBaseline = 'middle';
+      var textFillColor = 'blue';
+      var textFillColor2 = '#000000';
+
+      function eventWindowLoaded () {
+        var patternPreload = new Image();
+        patternPreload.onload = eventAssetsLoaded;
+        patternPreload.src = 'texture.jpg';
+      }
+
+      function eventAssetsLoaded() {
+        canvasApp();
+      }
+
+      function attachChangeEvent (id, callback) {
+        document.getElementById(id).addEventListener('change', callback, false);
+      }
+
+      function canvasApp () {
+        canvas = document.getElementById('canvas');
+        ctx = canvas.getContext('2d');
+
+        attachChangeEvent('textBox', textBoxChanged);
+        attachChangeEvent('fillOrStroke', fillOrStrokeChanged);
+        attachChangeEvent('textSize', textSizeChanged);
+        attachChangeEvent('textFillColor', textFillColorChanged);
+        attachChangeEvent('textFont', textFontChanged);
+        attachChangeEvent('textBaseline', textBaselineChanged);
+        attachChangeEvent('textAlign', textAlignChanged);
+        attachChangeEvent('fontWeight', fontWeightChanged);
+        attachChangeEvent('fontStyle', fontStyleChanged);
+        attachChangeEvent('shadowX', shadowXChanged);
+        attachChangeEvent('shadowY', shadowYChanged);
+        attachChangeEvent('shadowBlur', shadowBlurChanged);
+        attachChangeEvent('shadowColor', shadowColorChanged);
+        attachChangeEvent('textAlpha', textAlphaChanged);
+        attachChangeEvent('textFillColor2', textFillColor2Changed);
+        attachChangeEvent('fillType', fillTypeChanged); 
+        attachChangeEvent('canvasWidth', canvasWidthChanged);
+        attachChangeEvent('canvasHeight', canvasHeightChanged);
+        attachChangeEvent('canvasStyleWidth', canvasStyleSizeChanged);
+        attachChangeEvent('canvasStyleHeight', canvasStyleSizeChanged);
+
+        document.getElementById('createImageData').addEventListener('click',  createImageDataPressed);
+
+        pattern.src = 'texture.jpg'
+        drawScreen()
+      }
+
+      function drawScreen () {
+        // Background 
+        ctx.shadowColor = shadowColor;
+        ctx.fillStyle = 'lightblue';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = 'black';
+        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+        // text 
+        ctx.textBaseline = textBaseline;
+        ctx.textAlign = textAlign;
+        ctx.font = fontWeight + ' ' + fontSize + 'px ' + fontFace;
+        ctx.shadowOffsetX = shadowX;
+        ctx.shadowOffsetY = shadowY;
+        ctx.shadowBlur = shadowBlur;
+        ctx.globalApha = textAlpha;
+
+        var xPosition = canvas.width / 2;
+        var yPosition = canvas.height /2; 
+
+        var metrics = ctx.measureText(message);
+        var textWidth = metrics.width;
+
+        var textFiller;
+        var gradient;
+
+        if (fillType == 'colorFill') {
+          textFiller = textFillColor;
+        } else if (fillType == 'linearGradient') {
+          gradient = ctx.createLinearGradient(xPosition - textWidth / 2, yPosition, textWidth, yPosition);
+
+          gradient.addColorStop(0, textFillColor);
+          gradient.addColorStop(0.6, textFillColor2);
+          textFiller = gradient;
+        } else if (fillType == 'radialGradient') {
+          gradient = ctx.createRadialGradient(xPosition, yPosition, fontSize, xPosition + textWidth, yPosition, 1);
+
+          gradient.addColorStop(0, textFillColor);
+          gradient.addColorStop(0.6, textFillColor2);
+          textFiller = gradient;
+        } else if (fillType == 'pattern') {
+          textFiller = ctx.createPattern(pattern, 'repeat');
+        } else {
+          textFiller = textFillColor;
+        }
+
+        switch (fillOrStroke) {
+          case 'fill':
+            ctx.fillStyle = textFiller;
+          ctx.fillText(message, xPosition, yPosition);
+          break;
+          case 'stroke':
+            ctx.strokeStyle = textFiller;
+          ctx.strokeText(message, xPosition, yPosition);
+          break;
+          case 'both':
+            ctx.fillStyle = textFiller;
+          ctx.fillText(message, xPosition, yPosition);
+          ctx.strokeStyle = '#000000';
+          ctx.strokeText(message, xPosition, yPosition);
+          break;
+        }
+      }
+
+      function textBoxChanged (e) {
+        message = e.target.value;
+        drawScreen();
+      }
+
+      function textBaselineChanged (e) {
+        textBaseline = e.target.value;
+        drawScreen();
+      }
+
+      function textAlignChanged (e) {
+        textAlign = e.target.value;
+        drawScreen();
+      }
+      function fillOrStrokeChanged (e) {
+        fillOrStroke = e.target.value;
+        drawScreen();
+      }
+      function textSizeChanged (e) {
+        fontSize = e.target.value;
+        drawScreen();
+      }
+      function textFillColorChanged(e) {
+        textFillColor = e.target.value;
+        drawScreen();
+      }
+      function textFontChanged (e) {
+        fontFace = e.target.value;
+        drawScreen();
+      }
+      function fontWeightChanged (e) {
+        fontWeight = e.target.value;
+        drawScreen();
+      }
+      function fontWeightChanged (e) {
+        fontWeight = e.target.value;
+        drawScreen();
+      }
+      function fontStyleChanged (e) {
+        fontStyle = e.target.value;
+        drawScreen();
+      }
+      function shadowXChanged (e) {
+        shadowX = e.target.value;
+        drawScreen();
+      }
+      function shadowYChanged (e) {
+        shadowY = e.target.value;
+        drawScreen();
+      }
+      function shadowBlurChanged (e) {
+        shadowBlur = e.target.value;
+        drawScreen();
+      }
+      function shadowColorChanged (e) {
+        shadowColor = '#' + e.target.value;
+        drawScreen();
+      }
+      function textAlphaChanged (e) {
+        textAlpha = Number(e.target.value);
+        drawScreen();
+      }
+      function textFillColorChanged (e) {
+        textFillColor = '#' + e.target.value;
+        drawScreen();
+      }
+      function textFillColor2Changed (e) {
+        textFillColor2 = '#' + e.target.value;
+        drawScreen();
+      }
+
+      function fillTypeChanged (e) {
+        fillType = e.target.value;
+        drawScreen();
+      }
+
+      function canvasWidthChanged (e) {
+        canvas.width = e.target.value;
+        drawScreen();
+      }
+
+      function canvasHeightChanged (e) {
+        canvas.height = e.target.value;
+        drawScreen();
+      }
+
+      function canvasStyleSizeChanged () {
+        var styleWidth = document.getElementById('canvasStyleWidth');
+        var styleHeight = document.getElementById('canvasStyleHeight');
+        var styleValue = 'width:' + styleWidth.value + 'px; height:' +
+          styleHeight.value + 'px';
+
+        canvas.setAttribute('style', styleValue);
+        drawScreen()
+      }
+
+      function createImageDataPressed () {
+        var imageDateDisplay = document.getElementById('imageDataDisplay');
+        imageDataDisplay.value = canvas.toDataURL();
+        window.open(imageDataDisplay.value, 'cavasImage', 'left=0, top=0, width=' + 
+                    canvas.width + ',height=' + canvas.height + ',toolbar=0, resizeable=0');
+      }
+
+      // --
+      window.addEventListener('load', eventWindowLoaded, false);
+    </script>
+    <style>
+      .container {
+        width: 800px;
+        margin: 20px auto;
+        font-family: 'arial';
+      }
+
+      .canvas-wrapper {
+        top: 0px;
+        position: fixed;
+      }
+
+      .form-wrapper {
+        margin-top: 420px
+      }
+
+      form {
+        width: 800px;
+      }
+      fieldset {
+        border: 1px solid lightgray;
+      }
+      label {
+        display: inline-block;
+        padding: 10px;
+        width:  50%;
+        margin-right: 10px;
+      }
+
+      input, select {
+        width: 40%;
+      }
+
+      input[type=button] {
+        padding: 10px;
+      }
+      textarea {
+        width: 790px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+    <div class="canvas-wrapper">
+      <canvas id="canvas" width="800" height="400">
+        Your browser does not support HTML5 Canvas.
+      </canvas>
+    </div>
+    </div>
+    <div class="container form-wrapper">
+      <form action="">
+        <fieldset>
+          <label>Text:</label>
+          <input id="textBox" placeholder="your text" />
+        </fieldset>
+        <fieldset>
+          <label>Text Font:</label>
+          <select id="textFont">
+            <option value="serif">serif</option>
+            <option value="sans-serif">sans-serif</option>
+            <option value="cursive">cursive</option>
+            <option value="fantasy">fantasy</option>
+            <option value="monospace">monospace</option>
+          </select>
+        </fieldset>
+        <fieldset>
+          <label>Font Weight:</label>
+          <select id="fontWeight">
+            <option value="normal">normal</option>
+            <option value="bold">bold</option>
+            <option value="bolder">bolder</option>
+            <option value="lighter">lighter</option>
+          </select>
+        </fieldset>
+        <fieldset>
+          <label>Font Style:</label>
+          <select id="fontStyle">
+            <option value="normal">normal</option>
+            <option value="italic">italic</option>
+            <option value="oblique">oblique</option>
+          </select>
+        </fieldset>
+        <fieldset>
+          <label> Text Size:</label>
+          <input type="range" id="textSize" min="0" max="200" step="1" value="50"/>
+        </fieldset>
+        <fieldset>
+          <label> Fill Type:</label>
+          <select id="fillType">
+            <option value="colorFill">Color Fill</option>
+            <option value="linearGradient">Linear Gradient</option>
+            <option value="radialGradient">Radial Gradient</option>
+            <option value="pattern">pattern</option>
+          </select>
+        </fieldset>
+        <fieldset>
+          <label>Text Color:</label> <input class="color" id="textFillColor" value="FF0000"/>
+        </fieldset>
+        <fieldset>
+          <label>Text Color 2:</label> <input class="color" id="textFillColor2" value ="000000"/>
+        </fieldset>
+        <fieldset>
+          <label>Fill Or Stroke:</label>
+          <select id="fillOrStroke">
+            <option value="fill">fill</option>
+            <option value="stroke">stroke</option>
+            <option value="both">both</option>
+          </select>
+        </fieldset>
+        <fieldset>
+          <label>Text Baseline</label> <select id="textBaseline">
+            <option value="middle">middle</option>
+            <option value="top">top</option>
+            <option value="hanging">hanging</option>
+            <option value="alphabetic">alphabetic</option>
+            <option value="ideographic">ideographic</option>
+            <option value="bottom">bottom</option>
+          </select>
+        </fieldset>
+        <fieldset>
+          <label>Text Align</label> <select id="textAlign">
+            <option value="center">center</option>
+            <option value="start">start</option>
+            <option value="end">end</option>
+            <option value="left">left</option>
+            <option value="right">right</option>
+          </select>
+        </fieldset>
+        <fieldset>
+          <label>Alpha:</label>
+          <input type="range" id="textAlpha" min="0.0" max="1.0" step="0.01" value="1.0"/>
+        </fieldset>
+        <fieldset>
+          <label>Shadow X:</label>
+          <input type="range" id="shadowX" min="−100" max="100" step="1" value="1"/>
+        </fieldset>
+        <fieldset>
+          <label>Shadow Y:</label>
+          <input type="range" id="shadowY" min="−100" max="100" step="1" value="1"/>
+        </fieldset>
+        <fieldset>
+          <label>Shadow Blur:</label>
+          <input type="range" id="shadowBlur" min="1" max="100" step="1" value="1" />
+        </fieldset>
+        <fieldset>
+          <label>Shadow Color:</label>
+          <input class="color" id="shadowColor" value="707070"/>
+        </fieldset>
+        <fieldset>
+          <label>Canvas Width:</label>
+          <input type="range" id="canvasWidth" min="0" max="1000" step="1" value="500"/>
+        </fieldset>
+        <fieldset>
+          <label>Canvas Height:</label>
+          <input type="range" id="canvasHeight" min="0" max="1000" step="1" value="300"/>
+        </fieldset>
+        <fieldset>
+          <label> Canvas Style Width:</label>
+          <input type="range" id="canvasStyleWidth" min="0" max="1000" step="1" value="500"/>
+        </fieldset>
+        <fieldset>
+          <label>Canvas Style Height:</label>
+          <input type="range" id="canvasStyleHeight" min="0" max="1000" step="1"
+          value="300"/>
+        </fieldset>
+        <fieldset>
+          <input type="button" id="createImageData" value="Create Image Data">
+        </fieldset>
+          <textarea id="imageDataDisplay" rows=10 cols=30></textarea>
+        </form>
+      </div>
+    </body>
+  </html>
+
