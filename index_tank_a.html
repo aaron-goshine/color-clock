@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>  
+    <meta charset="UTF-8">
+    <title>Untitled Page</title>
+    <script  type="text/javascript">
+      //JavaScript goes here
+    window.addEventListener('load', eventWindowLoaded, false);
+    var canvas, ctx;
+
+
+    function eventWindowLoaded () {
+      canvas = document.getElementById('canvas');
+      ctx = canvas.getContext('2d');
+      tankSheet = new Image();
+      tankSheet.addEventListener('load', eventSheetLoaded, false);
+      tankSheet.src = 'tanks_sheet.png';
+    }
+
+    function eventSheetLoaded () {
+      drawScreen();
+    }
+
+    var dx = 3;
+    var dy = 0;
+    var xPosition = 50;
+    var yPosition = 50;
+    var rotation = 90;
+
+    var mapIndexOffset = -1;
+    var mapRows = 20;
+    var mapCols = 20;
+
+
+    var frameIndex = 0;
+    var animationFrames = [1, 2, 3, 4, 5, 6, 7, 8].reverse();
+    var animationExplosion = [17, 18, 19];
+    var tileMap = [
+      [32,31,31,31,1,31,31,31,31,32,32,31,31,31,1,31,31,31,31,32],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [32,1,26,1,26,1,26,1,1,32,32,1,26,1,26,1,26,1,1,32],
+      [32,26,1,1,26,1,1,26,1,32,32,26,1,1,26,1,1,26,1,32],
+      [32,1,1,1,26,26,1,26,1,32,32,1,1,1,26,26,1,26,1,32],
+      [32,1,1,26,1,1,1,26,1,32,32,1,1,26,1,1,1,26,1,32],
+      [32,1,1,1,1,1,1,26,1,32,32,1,1,1,1,1,1,26,1,32],
+      [1,1,26,1,26,1,26,1,1,1,1,1,26,1,26,1,26,1,1,1],
+      [32,1,1,1,1,1,1,1,1,32,32,1,1,1,1,1,1,1,1,32],
+      [32,1,1,1,1,1,31,31,1,1,1,1,1,1,1,31,1,1,31,32],
+      [32,1,1,1,1,1,31,31,1,32,32,31,31,31,1,31,31,31,31,32],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [32,1,26,1,26,1,26,1,1,32,26,1,26,1,26,1,26,1,1,32],
+      [32,26,1,1,26,1,1,26,1,32,32,26,1,1,26,1,1,26,1,32],
+      [32,1,1,1,26,26,1,26,1,32,32,1,1,1,26,26,1,26,1,32],
+      [32,1,1,26,1,1,1,26,1,32,32,1,1,26,1,1,1,26,1,32],
+      [32,1,1,1,1,1,1,26,1,32,32,1,1,1,1,1,1,26,1,32],
+      [1,1,26,1,26,1,26,1,1,1,1,1,26,1,26,1,26,1,1,1],
+      [32,1,1,1,1,1,1,1,1,32,32,1,1,1,1,1,1,1,1,32],
+      [32,31,31,31,31,31,31,31,31,32,32,31,31,31,31,31,31,31,31,32]
+
+    ];
+
+    function source (param, index) {
+      var tileId;
+      if (param instanceof Array) {
+        tileId = param[index];
+      } else {
+        tileId = param
+      }
+      var x = Math.floor(tileId % 8) * 32;
+      var y = Math.floor(tileId / 8) * 32;
+      return {x: x, y: y};
+    }
+    function drawScreen () {
+      ctx.fillStyle = '#333';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (var rowCtr = 0; rowCtr < mapRows; rowCtr++) {
+        for ( colCtr = 0; colCtr < mapCols; colCtr++) {
+          var tileId = tileMap[rowCtr][colCtr] + mapIndexOffset;
+          var tileSource = source(tileId);
+          ctx.drawImage(tankSheet, tileSource.x, tileSource.y, 32, 32, colCtr * 32, rowCtr * 32, 32, 32);
+        }
+      }
+      xPosition += dx;
+      yPosition += dy;
+
+      var source1 = source(animationFrames, frameIndex);
+      var source2 = source(animationExplosion, frameIndex % 3);
+
+      ctx.save()
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.translate(xPosition + 16, yPosition + 16);
+      ctx.rotate((Math.PI / 180) * rotation);
+
+      ctx.drawImage(tankSheet, source1.x, source1.y, 32, 32, -16, -16, 32, 32);
+      ctx.drawImage(tankSheet, source2.x, source2.y, 32, 32, -16, -16 - 26, 32, 32);
+
+      ctx.restore()
+
+      setTimeout(drawScreen, 100);
+      frameIndex ++;
+      if (frameIndex == animationFrames.length) frameIndex = 0;
+      if (xPosition > canvas.width) xPosition = 0;
+      rotation++;
+
+    }
+
+    function placeShip (image, posX, posY, width, height) {
+      if (width && height) {
+        ctx.drawImage(image, posX, posY, width, height);
+      } else {
+        ctx.drawImage(image, posX, posY);
+      }
+    }
+
+    </script>
+  </head>
+  <body style="background-color: #333">
+    <div style="margin: 50px auto; width: 640px;">
+      <canvas id="canvas" width="640" height="640"></canvas>
+    </div>
+  </body>
+</html>
+

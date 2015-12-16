@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>  
+    <meta charset="UTF-8">
+    <title>Untitled Page</title>
+    <script  type="text/javascript">
+      //JavaScript goes here
+    window.addEventListener('load', eventWindowLoaded, false);
+    var canvas, ctx, image;
+
+
+    function eventWindowLoaded () {
+      canvas = document.getElementById('canvas');
+      ctx = canvas.getContext('2d');
+      image = new Image();
+      image.addEventListener('load', eventImageLoaded, false);
+      image.src = 'pelican.jpg';
+    }
+
+    var windowWidth = 500;
+    var windowHeight = 500;
+    var viewPortWidth = 500;
+    var viewPortHeight = 500;
+
+    var windowX = 600;
+    var windowY = 600;
+
+    function eventImageLoaded () {
+      drawScreen();
+    }
+
+    function drawScreen () {
+      ctx.drawImage(image, windowX, windowY, windowWidth * 2, windowHeight * 2, 0, 0,
+                    viewPortWidth, viewPortHeight);
+
+    }
+
+
+    </script>
+  </head>
+  <body style="background-color: #333">
+    <div style="margin: 50px auto; width: 1600px; border: 1px solid white;">
+      <canvas id="canvas" width="1600" height="1600"></canvas>
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>  
+    <meta charset="UTF-8">
+    <title>Untitled Page</title>
+    <script  type="text/javascript">
+      //JavaScript goes here
+    window.addEventListener('load', eventWindowLoaded, false);
+    var canvas, ctx, image, mouseX, mouseY;
+    var imageData;
+    function eventWindowLoaded () {
+      canvas = document.getElementById('canvas');
+      canvas.addEventListener('mousemove', onMouseMove, false);
+      canvas.addEventListener('click', onMouseClick, false);
+      ctx = canvas.getContext('2d');
+      image = new Image();
+      image.addEventListener('load', eventImageLoaded, false);
+      image.src = 'tanks_sheet.png';
+    }
+
+
+    function eventImageLoaded () {
+      setup();
+    }
+
+    function setup () {
+      imageData = ctx.createImageData(32, 32);
+      ctx.fillSytle = "#aaa";
+      ctx.fillRect(0, 0, 256, 256);
+      drawTileSheet();
+    }
+    function drawTileSheet () {
+      ctx.drawImage(image, 0, 0);
+    }
+
+    function highlightTile(tileId, x, y) {
+      ctx.fillStyle = '#aaa';
+      ctx.fillRect(0, 0, 256, 128);
+      drawTileSheet();
+      imageData = ctx.getImageData(x, y, 32, 32);
+
+      for (var j = 3; j< imageData.data.length; j += 4) {
+        imageData.data[j] = 128;
+      }
+
+      var startX = Math.floor(tileId % 8) * 32;
+      var startY = Math.floor(tileId / 8) * 32;
+      ctx.strokeStyle = 'red';
+      ctx.strokeRect(startX, startY, 32, 32)
+    }
+
+    function onMouseMove (e) {
+      mouseX = e.clientX - canvas.offsetLeft;
+      mouseY = e.clientY - canvas.offsetTop;
+    }
+
+    function onMouseClick (e) {
+      console.log('click: '+ mouseX + ',' + mouseY);
+      var col = Math.floor(mouseX / 32);
+      var row = Math.floor(mouseY / 32);
+
+      if (mouseY < 128) {
+        var tileId = (row * 7) + (col + row);
+        highlightTile(tileId, col * 32, row * 32);
+
+      } else {
+        ctx.putImageData(imageData, col * 32, row * 32);
+      }
+    }
+
+
+
+
+    </script>
+  </head>
+  <body style="background-color: #333">
+    <div style="margin: 50px auto; width: 1600px; border: 1px solid white;">
+      <canvas id="canvas" width="1600" height="1600"></canvas>
+    </div>
+  </body>
+</html>
+
+

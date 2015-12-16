@@ -21,29 +21,44 @@
       drawScreen();
     }
 
-    var xx = 1;
-    var yy = 1;
-    var counter = 1;
+    var dx = 1;
+    var dy = 1;
+    var xPosition = 50;
+    var yPosition = 50;
+
     var frameIndex = 0;
-    var animationBlueTank = [1, 2, 3, 4, 5, 6, 7, 8,9, 10, 11, 12, 13, 14, 15, 16,17, 18, 19];
-
-    var yPostion = 800;
-
+    var animationBlueTank = [1, 2, 3, 4, 5, 6, 7, 8].reverse();
+    var animationExplosion = [17, 18, 19].reverse();
+    function source (frame, index) {
+      var x = Math.floor(frame[index] % 8) * 32;
+      var y = Math.floor(frame[index] / 8) * 32;
+      return {x: x, y: y};
+    }
     function drawScreen () {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      var sourceX = Math.floor(animationBlueTank[frameIndex] % 8) * 32;
-      var sourceY = Math.floor(animationBlueTank[frameIndex] / 8) * 32;
-      for (var x = 0; x < 10; x++) {
-        xPostion = 20 * (x * 2);
-        yPostion -= Math.random() * (yPostion / 10);
-        ctx.drawImage(tankSheet, sourceX, sourceY, 32, 32,
-                      xPostion, yPostion, 32, 32);
-      }
-      if (yPostion < 0.5) yPostion = canvas.height;
+     // yPosition -= dy * (yPosition / 100);
+      var source1 = source(animationBlueTank, frameIndex);
+      var source2 = source(animationExplosion, frameIndex % 3);
+      ctx.save()
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.translate(xPosition + 16, yPosition + 16);
+      ctx.rotate((Math.PI / 180) * 90);
+
+ //     xPosition = -16;
+  //    yPosition = -16;
+
+      ctx.drawImage(tankSheet, source1.x, source1.y, 32, 32, xPosition, yPosition, 32, 32);
+
+      ctx.drawImage(tankSheet, source2.x, source2.y, 32, 32, xPosition, yPosition - 26, 32, 32);
+
+      ctx.restore()
+
+//      if (yPosition < -100) yPosition = canvas.height;
       setTimeout(drawScreen, 100);
 
       frameIndex ++;
-      if (frameIndex == animationBlueTank.length && yPostion !== yPostion < 10) frameIndex = 0;
+      if (frameIndex == animationBlueTank.length && yPosition !== yPosition < 10) frameIndex = 0;
     }
 
     function placeShip (image, posX, posY, width, height) {
